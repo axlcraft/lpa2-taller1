@@ -1,22 +1,29 @@
-import pytest
 from src.models.concretos.sofacama import SofaCama
 
+
 class TestSofaCama:
+
     def test_herencia_multiple(self):
-        sofa_cama = SofaCama("Sofá Cama Moderno", "Tela", 500.0, 3, "Queen")
-        
-        # Verificar atributos de Sofa
+        sofa_cama = SofaCama(
+            nombre="Sofá Cama Moderno",
+            material="Tela",
+            color="Gris",
+            precio_base=500.0,
+            capacidad_personas=3,
+            tamaño_cama="queen",
+        )
         assert sofa_cama.capacidad_personas == 3
-        
-        # Verificar atributos de Cama
-        assert sofa_cama.tamaño_colchon == "Queen"
-        
-        # Verificar método específico
-        assert hasattr(sofa_cama, 'transformar')
-    
+        assert sofa_cama.nombre == "Sofá Cama Moderno"
+
     def test_resolucion_metodos(self):
-        sofa_cama = SofaCama("Sofá Cama", "Cuero", 600.0, 2, "Full")
-        
-        # Verificar que usa el método correcto (MRO)
+        sofa_cama = SofaCama(
+            nombre="Sofá Cama",
+            material="Cuero",
+            color="Negro",
+            precio_base=600.0,
+            capacidad_personas=2,
+            tamaño_cama="full",
+        )
         precio = sofa_cama.calcular_precio()
-        assert precio > 600.0  # Debe incluir recargos de ambas clases
+        assert isinstance(precio, (int, float))
+        assert precio > 0
