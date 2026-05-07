@@ -22,115 +22,126 @@
 
 ```
 lpa2-taller1/
-├─ src/                   # Código del proyecto
+├─ src/
+│  ├─ main.py
+│  ├─ models/
+│  │  ├─ __init__.py
+│  │  ├─ mueble.py
+│  │  ├─ categorias/
+│  │  │  ├─ __init__.py
+│  │  │  ├─ almacenamiento.py
+│  │  │  ├─ asientos.py
+│  │  │  └─ superficies.py
+│  │  ├─ composicion/
+│  │  │  ├─ __init__.py
+│  │  │  └─ comedor.py
+│  │  └─ concretos/
+│  │     ├─ __init__.py
+│  │     ├─ armario.py
+│  │     ├─ cajonera.py
+│  │     ├─ cama.py
+│  │     ├─ comedor.py
+│  │     ├─ escritorio.py
+│  │     ├─ mesa.py
+│  │     ├─ silla.py
+│  │     ├─ sillon.py
+│  │     ├─ sofa.py
+│  │     └─ sofacama.py
+│  ├─ services/
+│  │  ├─ __init__.py
+│  │  ├─ catalogo.py
+│  │  └─ tienda.py
+│  └─ ui/
+│     ├─ __init__.py
+│     └─ menu.py
 ├─ tests/
-│  ├─ fixtures/          # Datos de prueba
-│  ├─ unit/              # Pruebas unitarias
-│  │  ├─ conftest.py     # Configuración compartida
-│  │  └─ models/
-│  │     ├─ test_mueble.py
-│  │     ├─ categorias/
-│  │     │  ├─ test_almacenamiento.py
-│  │     │  ├─ test_asientos.py
-│  │     │  └─ test_superficies.py
-│  │     ├─ concretos/
-│  │     │  ├─ test_armario.py
-│  │     │  ├─ test_cajonera.py
-│  │     │  ├─ test_cama.py
-│  │     │  ├─ test_comedor.py
-│  │     │  ├─ test_escritorio.py
-│  │     │  ├─ test_mesa.py
-│  │     │  ├─ test_silla.py
-│  │     │  ├─ test_sillon.py
-│  │     │  ├─ test_sofa.py
-│  │     │  └─ test_sofacama.py
-│  │     └─ composicion/
-│  │        └─ test_comedor.py
-│  └─ integration/       # Pruebas de integración
-├─ .coveragerc           # Configuración de cobertura
-└─ pytest.ini            # Configuración de pytest
+│  ├─ __init__.py
+│  ├─ conftest.py
+│  └─ unit/
+│     ├─ test_main.py
+│     ├─ models/
+│     │  ├─ test_mueble.py
+│     │  ├─ categorias/
+│     │  │  ├─ test_almacenamiento.py
+│     │  │  ├─ test_asientos.py
+│     │  │  └─ test_superficies.py
+│     │  ├─ composicion/
+│     │  │  └─ test_comedor_composicion.py
+│     │  └─ concretos/
+│     │     ├─ test_aramario.py
+│     │     ├─ test_cajonera.py
+│     │     ├─ test_cama.py
+│     │     ├─ test_comedor.py
+│     │     ├─ test_escritorio.py
+│     │     ├─ test_mesa.py
+│     │     ├─ test_silla.py
+│     │     ├─ test_sillon.py
+│     │     ├─ test_sofa.py
+│     │     └─ test_sofacama.py
+│     ├─ services/
+│     │  ├─ test_catalogo.py
+│     │  ├─ test_catalogo_completo.py
+│     │  └─ test_tienda.py
+│     └─ ui/
+│        └─ test_menu.py
+├─ requirements.txt
+├─ pytest.ini
+└─ htmlcov/
 ```
 
 ## Configuración del Entorno
 
 ### Preparación del Proyecto
 
-- Crear un **fork** del repo `https://github.com/UR-CC/lpa2-taller1` en la cuenta GitHub del estudiante.
-
-- Abrir una terminal de comandos.
-
-- Crear un directorio para los **proyectos**:
-
-    ```bash
-    mkdir proyectos
-    cd proyectos
-    ```
-
-- Clonar el repo del estudiante:
+- Clonar el repositorio local o remoto:
 
     ```bash
     git clone https://github.com/usuario/lpa2-taller1.git
     cd lpa2-taller1
     ```
 
-- Crear entorno virtual - en Ubuntu utiliza `python3`:
+- Crear y activar un entorno virtual:
 
     ```bash
-    python -m venv venv
-    source venv/bin/activate # Mac/Linux/WSL
+    python3 -m venv venv
+    source venv/bin/activate
     pip install -r requirements.txt
     ```
 
-### Configurar Pytest
+### Ejecutar Pruebas
 
-Archivo `pytest.ini`:
+La suite de pruebas está organizada por módulos y se ejecuta con `pytest`.
 
-```ini
-[pytest]
-testpaths = tests
-python_files = test_*.py
-python_classes = Test*
-python_functions = test_*
-addopts =
-    --verbose
-    --color=yes
-    --cov=src
-    --cov-report=term-missing
-    --cov-report=html
-    --cov-branch
-pythonpath = . src tests
-filterwarnings =
-    ignore::DeprecationWarning
+```bash
+pytest
 ```
 
-### Configurar Cobertura
+Para ejecutar las pruebas con cobertura y generar el reporte HTML:
 
-Archivo `.coveragerc`:
+```bash
+pytest --cov=src --cov-report=html --cov-branch
+```
 
-```ini
-[run]
-source = src
-omit = 
-    */__pycache__/*
-    */tests/*
-    */venv/*
-    */migrations/*
+El reporte HTML se genera en `htmlcov/index.html`.
 
-[report]
-exclude_lines =
-    pragma: no cover
-    def __repr__
-    raise AssertionError
-    raise NotImplementedError
-    if __name__ == .__main__.:
-    pass
+### Configuración de Pytest
 
-fail_under = 80
+El archivo `pytest.ini` ya está configurado para:
+
+- buscar tests en `tests`
+- reconocer archivos `test_*.py`
+- ejecutar con cobertura sobre `src`
+- generar un reporte HTML
+
+### Generar reporte de cobertura
+
+Después de ejecutar las pruebas con cobertura, revisa el reporte generado con:
+
+```bash
+xdg-open htmlcov/index.html
 ```
 
 ## Diseño de Pruebas Unitarias
-
-### Filosofía de las Pruebas
 
 **Principios AAA (Arrange-Act-Assert):**
 

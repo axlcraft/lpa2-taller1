@@ -198,3 +198,43 @@ class TestTienda:
         reporte = tienda_con_muebles.generar_reporte_inventario()
         assert "DESCUENTOS ACTIVOS:" in reporte
         assert "10" in reporte
+
+    def test_agregar_mueble_precio_invalido(self, tienda_vacia):
+        mock_mueble = Mock()
+        mock_mueble.nombre = "Mueble Gratis"
+        mock_mueble.calcular_precio.return_value = 0
+
+        resultado = tienda_vacia.agregar_mueble(mock_mueble)
+
+        assert "Error" in resultado
+        assert "precio válido" in resultado
+
+    def test_agregar_mueble_error_calculo(self, tienda_vacia):
+        mock_mueble = Mock()
+        mock_mueble.nombre = "Mueble Fallido"
+        mock_mueble.calcular_precio.side_effect = Exception("calculo fallido")
+
+        resultado = tienda_vacia.agregar_mueble(mock_mueble)
+
+        assert "Error al calcular precio" in resultado
+        assert "calculo fallido" in resultado
+
+    def test_filtrar_por_precio_salta_mueble_con_error(self, tienda_vacia):
+        mock_mueble = Mock()
+        mock_mueble.calcular_precio.side_effect = Exception("error de precio")
+        mock_mueble.nombre = "Mueble Roto"
+        tienda_vacia._inventario.append(mock_mueble)
+
+        resultados = tienda_vacia.filtrar_por_precio(0, 1000)
+        assert resultados == []
+
+    def test_obtener_estadisticas_ignora_mueble_con_error(self, tienda_vacia):
+        mock_mueble = Mock()
+        mock_mueble.calcular_precio.side_effect = Exception("error estadisticas")
+        mock_mueble.nombre = "Mueble Roto"
+        tienda_vacia._inventario.append(mock_mueble)
+
+        stats = tienda_vacia.obtener_estadisticas()
+        assert stats["total_muebles"] == 1
+        assert stats["valor_inventario"] == 0
+        assert stats["tipos_muebles"] == {type(mock_mueble).__name__: 1}
